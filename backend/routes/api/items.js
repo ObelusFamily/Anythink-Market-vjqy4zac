@@ -144,6 +144,10 @@ router.post("/", auth.required, function(req, res, next) {
         return res.sendStatus(401);
       }
 
+      if (req.body.item.image === undefined || req.body.item.image.length === 0) {
+          req.body.item.image = '/placeholder.png';
+      }
+
       var item = new Item(req.body.item);
 
       item.seller = user;
@@ -183,11 +187,7 @@ router.put("/:item", auth.required, function(req, res, next) {
       }
 
       if (typeof req.body.item.image !== "undefined") {
-        if (req.body.item.image.length === 0) {
-          req.item.image = '/placeholder.png'
-        } else {
-          req.item.image = req.body.item.image;
-        }
+        req.item.image = req.body.item.image;
       }
 
       if (typeof req.body.item.tagList !== "undefined") {
