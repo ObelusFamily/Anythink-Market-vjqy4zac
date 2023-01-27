@@ -87,7 +87,6 @@ router.get("/", auth.optional, function(req, res, next) {
           items: await Promise.all(
             items.map(async function(item) {
               item.seller = await User.findById(item.seller);
-              item.image = item.image.length !== 0 ? item.image : '/placeholder.png'
               return item.toJSONFor(user);
             })
           ),
@@ -184,7 +183,11 @@ router.put("/:item", auth.required, function(req, res, next) {
       }
 
       if (typeof req.body.item.image !== "undefined") {
-        req.item.image = req.body.item.image;
+        if (req.body.item.image.length === 0) {
+          req.item.image = '/placeholder.png'
+        } else {
+          req.item.image = req.body.item.image;
+        }
       }
 
       if (typeof req.body.item.tagList !== "undefined") {
